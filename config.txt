@@ -29,6 +29,15 @@ text_position = top-center ; top/middle/bottom + left/center/right (hyphenated)
 text_padding = 12             ; padding (px) from the chosen anchor edge(s)
 text_box_max_width_pct = 0.9  ; wrap text to a fraction of cell width (0-1)
 
+# Make text pop on any background
+text_stroke_width = 2
+text_stroke_color = black
+text_shadow = 1
+text_shadow_offset = 3,3
+text_shadow_color = rgba(0,0,0,0.65)
+text_shadow_radius = 1
+
+
 # If you want to dim images to make text pop (0-255). 0 = no overlay; 255 = black.
 dim_overlay_alpha = 0
 

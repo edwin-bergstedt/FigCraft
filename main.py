@@ -299,6 +299,47 @@ def get_global_defaults(config: configparser.ConfigParser):
     dim_overlay_alpha = _get_int(g, "dim_overlay_alpha", 0)
     dim_overlay_alpha = max(0, min(255, dim_overlay_alpha))
 
+    # Stroke / Shadow
+    text_stroke_width = g.getint("text_stroke_width", fallback=0)
+
+    raw_stroke_color = g.get("text_stroke_color", fallback="black")
+    raw_stroke_color = raw_stroke_color.strip() if raw_stroke_color else "black"
+    text_stroke_color = parse_color(raw_stroke_color, default=(0, 0, 0, 255))
+
+    text_shadow = g.getint("text_shadow", fallback=0)
+
+    # Parse "x,y" tuple for shadow offset
+    def _parse_xy(s: str, default=(2, 2)):
+        if not s:
+            return default
+        t = s.strip().strip("()[]")
+        parts = [p.strip() for p in t.split(",") if p.strip()]
+        if len(parts) >= 2:
+            try:
+                dx = int(float(parts[0]))
+                dy = int(float(parts[1]))
+                return (dx, dy)
+            except Exception:
+                return default
+        return default
+
+    raw_shadow_offset = g.get("text_shadow_offset", fallback="2,2")
+    text_shadow_offset = _parse_xy(raw_shadow_offset, default=(2, 2))
+
+    raw_shadow_color = g.get("text_shadow_color", fallback="rgba(0,0,0,0.6)")
+    raw_shadow_color = (
+        raw_shadow_color.strip() if raw_shadow_color else "rgba(0,0,0,0.6)"
+    )
+    text_shadow_color = parse_color(
+        raw_shadow_color,
+        default=(0, 0, 0, 153),
+    )  # ~60% black
+
+    text_shadow_radius = g.getint(
+        "text_shadow_radius",
+        fallback=0,
+    )  # 0 = crisp; >0 draws a thicker cluster
+
     return {
         "margin": margin,
         "cell_w": cell_w,
@@ -314,6 +355,12 @@ def get_global_defaults(config: configparser.ConfigParser):
         "text_padding": text_padding,
         "max_width_pct": max_width_pct,
         "dim_overlay_alpha": dim_overlay_alpha,
+        "text_stroke_width": text_stroke_width,
+        "text_stroke_color": text_stroke_color,
+        "text_shadow": text_shadow,
+        "text_shadow_offset": text_shadow_offset,
+        "text_shadow_color": text_shadow_color,
+        "text_shadow_radius": text_shadow_radius,
     }
 
 
@@ -374,17 +421,19 @@ def draw_caption(
     position: str,
     align: str,
     max_width_pct: float,
+    **kwargs,
 ):
     """
-    Draw text inside rect with positional anchor (top-/center-/bottom- × left/center/right).
-    We use multiline text and compute exact placement.
+    Draw text inside rect with positional anchor (top/center/bottom × left/center/right).
+    Adds optional drop shadow and stroke (border).
     """
     if not text:
         return
 
-    (rx0, ry0, rx1, ry1) = rect
+    rx0, ry0, rx1, ry1 = rect
     avail_w = max(1, int((rx1 - rx0) * max(0.05, min(max_width_pct, 1.0))))
-    # Wrap
+
+    # Wrap text to available width
     wrapped = wrap_text(draw, text, font, avail_w)
 
     # Measure wrapped block
@@ -393,7 +442,7 @@ def draw_caption(
     h = bbox[3] - bbox[1]
 
     # Parse position
-    pos = position.lower().replace("middle", "center")
+    pos = (position or "bottom-center").lower().replace("middle", "center")
     vpos = "center"
     hpos = "center"
     if "top" in pos:
@@ -420,7 +469,75 @@ def draw_caption(
     else:
         y = ry0 + (ry1 - ry0 - h) // 2
 
-    draw.multiline_text((x, y), wrapped, font=font, fill=fill, align=align)
+    # Debug drawing (optional)
+    if kwargs.get("debug", 0):
+        draw.rectangle([x, y, x + w, y + h], outline=(0, 255, 0, 255), width=1)
+        draw.line((x - 5, y, x + 5, y), fill=(0, 255, 0, 255), width=1)
+        draw.line((x, y - 5, x, y + 5), fill=(0, 255, 0, 255), width=1)
+
+    # ---- Shadow ----
+    if int(kwargs.get("shadow", 0)) == 1:
+        dx, dy = kwargs.get("shadow_offset", (2, 2))
+        shadow_color = kwargs.get("shadow_color", (0, 0, 0, 153))
+        radius = int(kwargs.get("shadow_radius", 0) or 0)
+
+        # Basic crisp shadow at (dx, dy)
+        offsets = [(dx, dy)]
+
+        # If radius > 0, draw a small cluster around the offset for a thicker/softer look
+        if radius > 0:
+            extra = []
+            for ox in range(-radius, radius + 1):
+                for oy in range(-radius, radius + 1):
+                    if ox == 0 and oy == 0:
+                        continue
+                    extra.append((dx + ox, dy + oy))
+            offsets.extend(extra)
+
+        for ox, oy in offsets:
+            draw.multiline_text(
+                (x + ox, y + oy),
+                wrapped,
+                font=font,
+                fill=shadow_color,
+                align=align,
+            )
+
+    # ---- Stroke (border) ----
+    stroke_width = int(kwargs.get("stroke_width", 0) or 0)
+    stroke_fill = kwargs.get("stroke_fill", (0, 0, 0, 255))
+
+    # Draw main text with stroke if supported
+    try:
+        draw.multiline_text(
+            (x, y),
+            wrapped,
+            font=font,
+            fill=fill,
+            align=align,
+            stroke_width=stroke_width,
+            stroke_fill=stroke_fill,
+        )
+    except TypeError:
+        # Fallback for older Pillow: emulate stroke by drawing around the text
+        if stroke_width > 0:
+            offsets = set()
+            r = stroke_width
+            for ox in range(-r, r + 1):
+                for oy in range(-r, r + 1):
+                    if ox == 0 and oy == 0:
+                        continue
+                    offsets.add((ox, oy))
+            for ox, oy in offsets:
+                draw.multiline_text(
+                    (x + ox, y + oy),
+                    wrapped,
+                    font=font,
+                    fill=stroke_fill,
+                    align=align,
+                )
+        # Draw the fill on top
+        draw.multiline_text((x, y), wrapped, font=font, fill=fill, align=align)
 
 
 def place_image_into_cell(
@@ -600,6 +717,12 @@ def build_collage(config_path: str):
                 position,
                 align,
                 max_width_pct,
+                stroke_width=defaults.get("text_stroke_width", 0),
+                stroke_fill=defaults.get("text_stroke_color", (0, 0, 0, 255)),
+                shadow=defaults.get("text_shadow", 0),
+                shadow_offset=defaults.get("text_shadow_offset", (2, 2)),
+                shadow_color=defaults.get("text_shadow_color", (0, 0, 0, 153)),
+                shadow_radius=defaults.get("text_shadow_radius", 0),
             )
 
     # Convert to RGB if saving to JPEG
