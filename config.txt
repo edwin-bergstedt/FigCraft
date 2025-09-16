@@ -1,0 +1,54 @@
+[GLOBAL]
+# Grid: either "rowsxcols" (e.g., "2x3") or set rows/cols below.
+grid_shape = 1x2
+# or:
+# rows = 2
+# cols = 3
+
+# Pixels between cells (also used as outer margin).
+margin = 24
+
+# Canvas cell size in pixels (each image fits within this area).
+cell_width = 800
+cell_height = 600
+
+# File to save (png/jpg). PNG recommended for sharp text.
+output_file = collage_output.png
+
+# Background color for canvas (hex or rgb/rgba).
+background_color = #ffffff
+
+# ----- Text defaults (can be overridden per image) -----
+text_string = Test                ; (optional; if empty and not overridden, no text drawn)
+text_color = #ffffffff
+text_size = 30
+# Either a system font file path OR leave blank to auto-pick a common font.
+text_font =                   ; e.g., C:\Windows\Fonts\arial.ttf or /usr/share/fonts/dejavu/DejaVuSans.ttf
+text_alignment = center       ; left | center | right
+text_position = top-center ; top/middle/bottom + left/center/right (hyphenated)
+text_padding = 12             ; padding (px) from the chosen anchor edge(s)
+text_box_max_width_pct = 0.9  ; wrap text to a fraction of cell width (0-1)
+
+# If you want to dim images to make text pop (0-255). 0 = no overlay; 255 = black.
+dim_overlay_alpha = 0
+
+[IMAGES]
+# Order defines placement row-major (top-left to right, then next row), or add row/col in per-image section.
+# List only the filenames found under ./photos/
+order =
+    img1.jpg
+    img2.jpg
+
+# -------- OPTIONAL: Per-image overrides ----------
+[image:img1.jpg]
+text_string = Custom caption for image 1
+# text_position = middle-left      ; top/middle/bottom + left/center/right (hyphenated)
+# text_alignment = left         ; left | center | right
+# text_color = #ff0055
+# text_size = 42
+# text_font = /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf
+# row = 1
+# col = 2  ; 1-based indexing for explicit placement (overrides order list)
+
+[image:img2.jpg]
+# text_string = Custom caption for image 2
