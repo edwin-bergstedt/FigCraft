@@ -1,6 +1,6 @@
 [GLOBAL]
 # Scale the entire rendering (cells, margins, text, stroke, shadow)
-render_scale = 2.0          ; 1.0 = current size, 2.0 = 2× pixels in each dimension
+render_scale = 4.0          ; 1.0 = current size, 2.0 = 2× pixels in each dimension
 # Embed print DPI metadata
 output_dpi = 300
 # JPEG tuning for crisp text (if saving .jpg/.jpeg)
@@ -9,14 +9,12 @@ jpeg_subsampling = 0         ; 0=4:4:4 (no chroma subsampling), best for text
 # For PNG (optional):
 png_compress_level = 6
 
-# Grid: either "rowsxcols" (e.g., "2x3") or set rows/cols below.
-grid_shape = 1x2
-# or:
-# rows = 2
-# cols = 3
+# Grid: set rows/cols below.
+rows = 2
+cols = 2
 
 # Pixels between cells (also used as outer margin).
-margin = 24
+margin = 18
 
 # Canvas cell size in pixels (each image fits within this area).
 cell_width = 800
@@ -31,11 +29,11 @@ background_color = #ffffff
 # ----- Text defaults (can be overridden per image) -----
 text_string = Test                ; (optional; if empty and not overridden, no text drawn)
 text_color = #ffffffff
-text_size = 30
+text_size = 32
 # Either a system font file path OR leave blank to auto-pick a common font.
 text_font =                   ; e.g., C:\Windows\Fonts\arial.ttf or /usr/share/fonts/dejavu/DejaVuSans.ttf
 text_alignment = center       ; left | center | right
-text_position = top-center ; top/middle/bottom + left/center/right (hyphenated)
+text_position = middle-center ; top/middle/bottom + left/center/right (hyphenated)
 text_padding = 12             ; padding (px) from the chosen anchor edge(s)
 text_box_max_width_pct = 0.9  ; wrap text to a fraction of cell width (0-1)
 
@@ -57,6 +55,8 @@ dim_overlay_alpha = 0
 order =
     img1.jpg
     img2.jpg
+    img3.tif
+    img4.jpg
 
 # -------- OPTIONAL: Per-image overrides ----------
 [image:img1.jpg]

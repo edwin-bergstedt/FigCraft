@@ -8,3 +8,6 @@ wheels/
 
 # Virtual environments
 .venv
+# Photos
+photos/
+collage_output.png
