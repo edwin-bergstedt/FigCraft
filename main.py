@@ -256,6 +256,36 @@ def get_global_defaults(config: configparser.ConfigParser):
     cell_h = _get_int(g, "cell_height", 600)
     output_file = g.get("output_file", fallback="collage_output.png")
 
+    # --- Rendering quality settings ---
+    # Render scale – scales EVERYTHING uniformly (cells, margins, fonts, stroke, shadow)
+    render_scale = g.getfloat("render_scale", fallback=1.0)
+    render_scale = max(0.1, min(8.0, render_scale))
+
+    # DPI metadata for saving
+    output_dpi = g.getint("output_dpi", fallback=300)
+    output_dpi = max(72, min(1200, output_dpi))
+
+    # JPEG save params (for .jpg/.jpeg)
+    jpeg_quality = g.getint("jpeg_quality", fallback=95)
+    jpeg_quality = max(70, min(100, jpeg_quality))
+
+    # subsampling: accept 0/1/2 or strings like '0', '4:4:4', 'keep'
+    raw_sub = (g.get("jpeg_subsampling", fallback="0") or "0").strip().lower()
+    subsampling_map = {
+        "0": 0,
+        "1": 1,
+        "2": 2,
+        "4:4:4": 0,
+        "4:2:2": 1,
+        "4:2:0": 2,
+        "keep": "keep",
+    }
+    jpeg_subsampling = subsampling_map.get(raw_sub, 0)
+
+    # PNG compression level (0..9) – does not change resolution, only file size/speed
+    png_compress_level = g.getint("png_compress_level", fallback=6)
+    png_compress_level = max(0, min(9, png_compress_level))
+
     # --- Colors: handle empty values safely
     raw_bg = g.get("background_color", fallback="").strip()
     if not raw_bg:
@@ -361,6 +391,11 @@ def get_global_defaults(config: configparser.ConfigParser):
         "text_shadow_offset": text_shadow_offset,
         "text_shadow_color": text_shadow_color,
         "text_shadow_radius": text_shadow_radius,
+        "render_scale": render_scale,
+        "output_dpi": output_dpi,
+        "jpeg_quality": jpeg_quality,
+        "jpeg_subsampling": jpeg_subsampling,
+        "png_compress_level": png_compress_level,
     }
 
 
@@ -583,28 +618,45 @@ def build_collage(config_path: str):
     max_width_pct = defaults["max_width_pct"]
     dim_alpha = defaults["dim_overlay_alpha"]
 
-    # Compute canvas size with outer margins = margin
-    canvas_w = cols * cell_w + (cols + 1) * margin
-    canvas_h = rows * cell_h + (rows + 1) * margin
+    scale = defaults.get("render_scale", 1.0)
+
+    # Scale the structural dimensions
+    margin_s = int(round(defaults["margin"] * scale))
+    cell_w_s = int(round(defaults["cell_w"] * scale))
+    cell_h_s = int(round(defaults["cell_h"] * scale))
+
+    # Canvas size with scaled values
+    canvas_w = cols * cell_w_s + (cols + 1) * margin_s
+    canvas_h = rows * cell_h_s + (rows + 1) * margin_s
 
     # Create canvas
     canvas = Image.new("RGBA", (canvas_w, canvas_h), color=bg_color)
     draw = ImageDraw.Draw(canvas)
 
+    # Scale text-related defaults
+    global_size_s = max(1, int(round(defaults["text_size"] * scale)))
+    text_padding_s = max(0, int(round(defaults["text_padding"] * scale)))
+
+    # If you added stroke/shadow previously, scale them too:
+    stroke_w_s = int(round(defaults.get("text_stroke_width", 0) * scale))
+    sh_off = defaults.get("text_shadow_offset", (2, 2))
+    shadow_off_s = (int(round(sh_off[0] * scale)), int(round(sh_off[1] * scale)))
+    shadow_radius_s = int(round(defaults.get("text_shadow_radius", 0) * scale))
+
+    # Load global font at scaled size
+    global_font = load_font(global_font_path, global_size_s)
+
     # Prepare image order & per-image overrides
     order, explicit_map, per_image = get_image_order_and_positions(config, rows, cols)
-
-    # For convenience, pre-load global font
-    global_font = load_font(global_font_path, global_size)
 
     # Build grid
     idx = 0
     for r in range(rows):
         for c in range(cols):
-            x0 = margin + c * (cell_w + margin)
-            y0 = margin + r * (cell_h + margin)
-            x1 = x0 + cell_w
-            y1 = y0 + cell_h
+            x0 = margin_s + c * (cell_w_s + margin_s)
+            y0 = margin_s + r * (cell_h_s + margin_s)
+            x1 = x0 + cell_w_s
+            y1 = y0 + cell_h_s
             cell_rect = (x0, y0, x1, y1)
 
             fname = order[idx] if idx < len(order) else None
@@ -651,20 +703,21 @@ def build_collage(config_path: str):
             # If no caption at this point, skip drawing for this image
             if text_string is None or str(text_string).strip() == "":
                 continue
+
             # --- Font ---
-            text_size = (
-                p.get("text_size") if p.get("text_size") is not None else global_size
+            # Per-image font
+            text_size_raw = (
+                p.get("text_size")
+                if p.get("text_size") is not None
+                else defaults["text_size"]
             )
+            text_size_s = max(1, int(round(text_size_raw * scale)))
             text_font_path = (
                 p.get("text_font")
                 if p.get("text_font") is not None
                 else global_font_path
             )
-            font = (
-                global_font
-                if (text_font_path == global_font_path and text_size == global_size)
-                else load_font(text_font_path, text_size)
-            )
+            font = load_font(text_font_path, text_size_s)
 
             # --- Color ---
             raw_override_color = p.get("text_color")
@@ -706,8 +759,9 @@ def build_collage(config_path: str):
             caption_rect = compute_anchor_rect(
                 *img_rect,
                 position=position,
-                pad=text_padding,
+                pad=text_padding_s,
             )
+
             draw_caption(
                 draw,
                 caption_rect,
@@ -717,24 +771,42 @@ def build_collage(config_path: str):
                 position,
                 align,
                 max_width_pct,
-                stroke_width=defaults.get("text_stroke_width", 0),
+                stroke_width=stroke_w_s,
                 stroke_fill=defaults.get("text_stroke_color", (0, 0, 0, 255)),
                 shadow=defaults.get("text_shadow", 0),
-                shadow_offset=defaults.get("text_shadow_offset", (2, 2)),
+                shadow_offset=shadow_off_s,
                 shadow_color=defaults.get("text_shadow_color", (0, 0, 0, 153)),
-                shadow_radius=defaults.get("text_shadow_radius", 0),
+                shadow_radius=shadow_radius_s,
+                debug=defaults.get("debug_caption_boxes", 0),
             )
 
-    # Convert to RGB if saving to JPEG
     ext = os.path.splitext(output_file)[1].lower()
+    out_path = os.path.join(SCRIPT_DIR, output_file)
+
+    save_kwargs = {}
+    dpi = defaults.get("output_dpi", 300)
+    if dpi:
+        save_kwargs["dpi"] = (dpi, dpi)
+
     if ext in [".jpg", ".jpeg"]:
         out_img = canvas.convert("RGB")
+        save_kwargs.update(
+            {
+                "quality": defaults.get("jpeg_quality", 95),
+                "optimize": True,
+                "progressive": True,
+            },
+        )
+        subs = defaults.get("jpeg_subsampling", 0)
+        if subs in (0, 1, 2, "keep"):
+            save_kwargs["subsampling"] = subs
     else:
         out_img = canvas
+        # PNG compression (does not affect resolution)
+        save_kwargs["compress_level"] = defaults.get("png_compress_level", 6)
 
-    out_path = os.path.join(SCRIPT_DIR, output_file)
-    out_img.save(out_path)
-    print(f"Saved collage to: {out_path}")
+    out_img.save(out_path, **save_kwargs)
+    print(f"Saved collage to: {out_path}  ({canvas_w}x{canvas_h}px @ {dpi}dpi)")
 
 
 def main():

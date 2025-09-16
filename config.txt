@@ -1,4 +1,14 @@
 [GLOBAL]
+# Scale the entire rendering (cells, margins, text, stroke, shadow)
+render_scale = 2.0          ; 1.0 = current size, 2.0 = 2× pixels in each dimension
+# Embed print DPI metadata
+output_dpi = 300
+# JPEG tuning for crisp text (if saving .jpg/.jpeg)
+jpeg_quality = 95
+jpeg_subsampling = 0         ; 0=4:4:4 (no chroma subsampling), best for text
+# For PNG (optional):
+png_compress_level = 6
+
 # Grid: either "rowsxcols" (e.g., "2x3") or set rows/cols below.
 grid_shape = 1x2
 # or:
