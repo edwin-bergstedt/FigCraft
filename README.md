@@ -26,14 +26,13 @@ Multiple configuration files for different layouts.
 
 📂 Folder Structure
 
-project/
-
-├─ main.py
-├─ config.txt
-└─ photos/\br
-   	├─ image1.jpg
-   	├─ image2.jpg
-   	└─ ...
+project/<br>
+	├─ main.py<br>
+	├─ config.txt<br>
+	└─ photos/<br>
+   		├─ image1.jpg<br>
+   		├─ image2.jpg<br>
+   		└─ ...<br>
 
 
 ⚙️ Configuration Basics
