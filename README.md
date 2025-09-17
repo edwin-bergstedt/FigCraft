@@ -1,4 +1,5 @@
 🖼️ FigCraft
+
 FigCraft is a Python tool that simplifies creating image collages for reports, presentations, and documentation.
 It supports flexible layouts, text customization, and high-resolution export for professional results.
 
@@ -19,6 +20,7 @@ Multiple configuration files for different layouts.
 
 
 📂 Folder Structure
+
 project/
 ├─ main.py
 ├─ config.txt
