@@ -1,219 +1,143 @@
-🖼️ FigCraft
+🖼️ FigCraft<br>
+FigCraft is a Python tool that simplifies creating image collages for reports, presentations, and documentation.<br>
+It supports flexible layouts, text customization, and high-resolution export for professional results.<br>
 
-FigCraft is a Python tool that simplifies creating image collages for reports, presentations, and documentation.
-It supports flexible layouts, text customization, and high-resolution export for professional results.
+✅ Features<br>
+Flexible grid layouts (e.g., 2x2, 3x2, 4x1).<br>
+Global and per-image text customization:<br>
+Font, size, color<br>
+Position (top/middle/bottom × left/center/right)<br>
+Alignment (left, center, right)<br>
+Adjustable margins and spacing.<br>
+Configurable image order.<br>
+High-resolution export with DPI and scaling.<br>
+Optional text stroke (border) and shadow for readability.<br>
+Multiple configuration files for different layouts.<br>
 
-✅ Features
-
-Flexible grid layouts (e.g., 2x2, 3x2, 4x1).
-
-Global and per-image text customization:
-
-Font, size, color
-Position (top/middle/bottom × left/center/right)
-Alignment (left, center, right)
-
-Adjustable margins and spacing.
-
-Configurable image order.
-
-High-resolution export with DPI and scaling.
-
-Optional text stroke (border) and shadow for readability.
-
-Multiple configuration files for different layouts.
-
-
-📂 Folder Structure
-
+📂 Folder Structure<br>
 project/<br>
-	├─ main.py<br>
-	├─ config.txt<br>
-	└─ photos/<br>
-   		├─ image1.jpg<br>
-   		├─ image2.jpg<br>
-   		└─ ...<br>
+    ├─ main.py<br>
+    ├─ config.txt<br>
+    └─ photos/<br>
+        ├─ image1.jpg<br>
+        ├─ image2.jpg<br>
+        └─ ...<br>
 
 
-⚙️ Configuration Basics
+⚙️ Configuration Basics<br>
+All settings are defined in a config.txt file.<br>
 
-All settings are defined in a config.txt file.
+[GLOBAL]<br>
+grid_shape: Layout of the collage (e.g., 2x2, 3x2).<br>
+margin: Spacing between cells (in pixels).<br>
+text settings: Color, size, font, alignment, position.<br>
+output_file: Name of the exported collage image.<br>
 
-[GLOBAL]
+[IMAGES]<br>
+order: List of image filenames in the desired order.<br>
 
-grid_shape: Layout of the collage (e.g., 2x2, 3x2).
+Example:<br>
+[GLOBAL]<br>
+grid_shape = 2x2<br>
+margin = 24<br>
+text_color = white<br>
+text_size = 36<br>
+text_alignment = center<br>
+text_position = bottom-center<br>
+output_file = collage_output.png<br>
 
-margin: Spacing between cells (in pixels).
+[IMAGES]<br>
+order = <br>
+    img1.jpg<br>
+    img2.jpg<br>
+    img3.jpg<br>
+    img4.jpg<br>
 
-text settings: Color, size, font, alignment, position.
+🖼️ Image Ordering<br>
+Images are placed row by row, left to right:<br>
+2×2 grid:<br>
+    1  2<br>
+    3  4<br>
 
-output_file: Name of the exported collage image.
+4×1 grid:<br>
+    1<br>
+    2<br>
+    3<br>
+    4<br>
 
-[IMAGES]
+⚙️ Install<br>
+To set up the project using uv:<br>
 
-order: List of image filenames in the desired order.
-
-Example:
-
-[GLOBAL]
-
-grid_shape = 2x2
-
-margin = 24
-
-text_color = white
-
-text_size = 36
-
-text_alignment = center
-
-text_position = bottom-center
-
-output_file = collage_output.png
-
-
-[IMAGES]
-
-order = 
-
-	img1.jpg
-
-	img2.jpg
-
-	img3.jpg
-
-	img4.jpg
-
-🖼️ Image Ordering
-
-Images are placed row by row, left to right:
-
-2×2 grid:
-
-	1  2
-
-	3  4
-
-4×1 grid:
-
-	1
-
-	2
-
-	3
-
-	4
-
-⚙️ Install
-
-To set up the project using uv:
-
-1. Install uv (if not already installed)
+1. Install uv (if not already installed)<br>
 
 	curl -LsSf https://astral.sh/uv/install.sh | sh
 
-Or follow instructions from uv's GitHub page.
+Or follow instructions from uv's GitHub page.<br>
 
-2. Sync dependencies and create virtual environment
+2. Sync dependencies and create virtual environment<br>
 
 	uv sync
 
-This will:
+This will:<br>
+Create a virtual environment<br>
+Install all required packages from pyproject.toml and requirements.txt (if present)<br>
 
-Create a virtual environment
-
-Install all required packages from pyproject.toml and requirements.txt (if present)
-
-▶️ Usage
-
-Run the script with the desired configuration file:
+▶️ Usage<br>
+Run the script with the desired configuration file:<br>
 
 	uv run main.py
 
-Or with a custom config file:
+Or with a custom config file:<br>
 
 	uv run main.py config_example.txt
 
-If no file is specified, it defaults to config.txt.
+If no file is specified, it defaults to config.txt.<br>
 
+🔍 Advanced Features<br>
+✅ Per-Image Overrides<br>
+Override global settings for specific images:<br>
 
-🔍 Advanced Features
+[image:img2.jpg]<br>
+text_string = Custom caption for image 2<br>
+text_color = #ff0000<br>
+text_size = 48<br>
+text_alignment = left<br>
+text_position = top-left<br>
 
-✅ Per-Image Overrides
+✅ High-Resolution Export<br>
+For print-quality output:<br>
+render_scale = 2.0      ; doubles pixel dimensions<br>
+output_dpi = 300        ; embed 300 DPI for printing<br>
+jpeg_quality = 95<br>
+jpeg_subsampling = 0    ; best for text<br>
 
-Override global settings for specific images:
+✅ Text Styling<br>
+Enhance readability:<br>
+text_stroke_width = 2<br>
+text_stroke_color = black<br>
+text_shadow = 1<br>
+text_shadow_offset = 3,3<br>
+text_shadow_color = rgba(0,0,0,0.6)<br>
+text_shadow_radius = 1<br>
 
-[image:img2.jpg]
+✅ Dim Overlay<br>
+Darken images slightly to make text pop:<br>
+INIdim_overlay_alpha = 80   ; 0 = off, 255 = fully black<br>
 
-text_string = Custom caption for image 2
-
-text_color = #ff0000
-
-text_size = 48
-
-text_alignment = left
-
-text_position = top-left
-
-✅ High-Resolution Export
-
-For print-quality output:
-
-render_scale = 2.0      ; doubles pixel dimensions
-
-output_dpi = 300        ; embed 300 DPI for printing
-
-jpeg_quality = 95
-
-jpeg_subsampling = 0    ; best for text
-
-
-✅ Text Styling
-
-Enhance readability:
-
-text_stroke_width = 2
-
-text_stroke_color = black
-
-text_shadow = 1
-
-text_shadow_offset = 3,3
-
-text_shadow_color = rgba(0,0,0,0.6)
-
-text_shadow_radius = 1
-
-
-✅ Dim Overlay
-
-Darken images slightly to make text pop:
-
-INIdim_overlay_alpha = 80   ; 0 = off, 255 = fully black
-
-
-✅ Multiple Configurations
-
-Create multiple .txt configs for different layouts or styles:
+✅ Multiple Configurations<br>
+Create multiple .txt configs for different layouts or styles:<br>
 
 	puv run main.py config_presentation.txt
 
-or:
+or:<br>
 
 	uv run main.py config_report.txt
 
+✅ Debug Mode<br>
+Enable debug guides to visualize caption placement:<br>
+    debug_caption_boxes = 1<br>
 
-✅ Debug Mode
-
-Enable debug guides to visualize caption placement:
-
-	debug_caption_boxes = 1
-
-
-🖨️ Print-Quality Tips
-
-A4 @ 300 DPI → ~3508×2480 px → render_scale ≈ 1.4 for a 2×3 grid with 800 px cells.
-
-A3 @ 300 DPI → ~4961×3508 px → render_scale ≈ 2.0.
-
-Use PNG for sharp text or JPEG with subsampling=0 for smaller files.
+🖨️ Print-Quality Tips<br>
+A4 @ 300 DPI → ~3508×2480 px → render_scale ≈ 1.4 for a 2×3 grid with 800 px cells.<br>
+A3 @ 300 DPI → ~4961×3508 px → render_scale ≈ 2.0.<br>
+Use PNG for sharp text or JPEG with subsampling=0 for smaller files.<br>
