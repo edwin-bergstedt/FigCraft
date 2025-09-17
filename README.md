@@ -6,6 +6,7 @@ It supports flexible layouts, text customization, and high-resolution export for
 ✅ Features
 
 Flexible grid layouts (e.g., 2x2, 3x2, 4x1).
+
 Global and per-image text customization:
 
 Font, size, color
@@ -13,31 +14,45 @@ Position (top/middle/bottom × left/center/right)
 Alignment (left, center, right)
 
 Adjustable margins and spacing.
+
 Configurable image order.
+
 High-resolution export with DPI and scaling.
+
 Optional text stroke (border) and shadow for readability.
+
 Multiple configuration files for different layouts.
 
 
 📂 Folder Structure
 
 project/
+
 ├─ main.py
+
 ├─ config.txt
+
 └─ photos/
+
    ├─ image1.jpg
+
    ├─ image2.jpg
+
    └─ ...
 
 
 ⚙️ Configuration Basics
+
 All settings are defined in a config.txt file.
 
 [GLOBAL]
 
 grid_shape: Layout of the collage (e.g., 2x2, 3x2).
+
 margin: Spacing between cells (in pixels).
+
 text settings: Color, size, font, alignment, position.
+
 output_file: Name of the exported collage image.
 
 [IMAGES]
@@ -49,19 +64,30 @@ Example:
 [GLOBAL]
 
 grid_shape = 2x2
+
 margin = 24
+
 text_color = white
+
 text_size = 36
+
 text_alignment = center
+
 text_position = bottom-center
+
 output_file = collage_output.png
+
 
 [IMAGES]
 
 order = 
+
 	img1.jpg
+
 	img2.jpg
+
 	img3.jpg
+
 	img4.jpg
 
 🖼️ Image Ordering
@@ -70,19 +96,19 @@ Images are placed row by row, left to right:
 
 2×2 grid:
 
-1  2
+	1  2
 
-3  4
+	3  4
 
 4×1 grid:
 
-1
+	1
 
-2
+	2
 
-3
+	3
 
-4
+	4
 
 ⚙️ Install
 
@@ -176,9 +202,11 @@ INIdim_overlay_alpha = 80   ; 0 = off, 255 = fully black
 
 Create multiple .txt configs for different layouts or styles:
 
-	python main.py config_presentation.txt
+	puv run main.py config_presentation.txt
 
-	python main.py config_report.txt
+or:
+
+	uv run main.py config_report.txt
 
 
 ✅ Debug Mode
