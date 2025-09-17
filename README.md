@@ -87,6 +87,7 @@ order = <br>
 Or follow instructions from uv's GitHub page: https://github.com/astral-sh/uv
 
 **3. cd to the FigCraft folder**
+
 **4. Sync dependencies and create virtual environment**
 ```python
 	uv sync
