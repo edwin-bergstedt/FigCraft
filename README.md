@@ -29,16 +29,11 @@ Multiple configuration files for different layouts.
 project/
 
 ├─ main.py
-
 ├─ config.txt
-
-└─ photos/
-
-   ├─ image1.jpg
-
-   ├─ image2.jpg
-
-   └─ ...
+└─ photos/\br
+   	├─ image1.jpg
+   	├─ image2.jpg
+   	└─ ...
 
 
 ⚙️ Configuration Basics
