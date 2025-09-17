@@ -75,19 +75,19 @@ order = <br>
 ## ⚙️ Install<br>
 ### To set up the project using uv:
 
-1. Git clone the FigCraft repository
+**1. Git clone the FigCraft repository**
 ```sh
 	git clone https://github.com/edwin-bergstedt/FigCraft.git
 ```
-2. Install uv (if not already installed)
+**2. Install uv (if not already installed)**
 ```sh
 	curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
 Or follow instructions from uv's GitHub page: https://github.com/astral-sh/uv
 
-3. cd to the FigCraft folder
-4. Sync dependencies and create virtual environment
+**3. cd to the FigCraft folder**
+**4. Sync dependencies and create virtual environment**
 ```python
 	uv sync
 ```
