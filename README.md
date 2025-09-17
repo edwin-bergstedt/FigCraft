@@ -70,15 +70,16 @@ order = <br>
 ### To set up the project using uv:
 
 1. Install uv (if not already installed)
-
+```python
 	curl -LsSf https://astral.sh/uv/install.sh | sh
-
+```
 
 Or follow instructions from uv's GitHub page.
 
 2. Sync dependencies and create virtual environment
-
+```python
 	uv sync
+```
 
 ### This will:<br>
 Create a virtual environment<br>
