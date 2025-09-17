@@ -32,7 +32,7 @@ text_color = #ffffffff
 text_size = 32
 # Either a system font file path OR leave blank to auto-pick a common font.
 text_font =                   ; e.g., C:\Windows\Fonts\arial.ttf or /usr/share/fonts/dejavu/DejaVuSans.ttf
-text_alignment = center       ; left | center | right
+text_alignment = left         ; left | center | right
 text_position = top-left      ; Vertical: top/middle/bottom + Horizontal: left/center/right (hyphenated) Example: top-left, middle-center
 text_padding = 12             ; padding (px) from the chosen anchor edge(s)
 text_box_max_width_pct = 0.9  ; wrap text to a fraction of cell width (0-1)
@@ -62,7 +62,7 @@ order =
 
 # -------- OPTIONAL: Per-image overrides ----------
 [image:img1.svg]
-text_string = Custom caption for image 1
+text_string = a)
 # text_position = middle-left      ; top/middle/bottom + left/center/right (hyphenated)
 # text_alignment = left         ; left | center | right
 # text_color = #ff0055
@@ -72,4 +72,10 @@ text_string = Custom caption for image 1
 # col = 2  ; 1-based indexing for explicit placement (overrides order list)
 
 [image:img2.svg]
-# text_string = Custom caption for image 2
+text_string = b)
+
+[image:img3.svg]
+text_string = c)
+
+[image:img4.svg]
+text_string = d)

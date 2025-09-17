@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
 import configparser
+import io
 import os
 import sys
 from pathlib import Path
 
+import cairosvg
 from PIL import Image, ImageColor, ImageDraw, ImageFont, ImageOps
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -196,7 +198,7 @@ def get_image_order_and_positions(config, rows, cols):
             for file in files:
                 # Only include image files (optional: filter by extension)
                 if file.lower().endswith(
-                    (".png", ".jpg", ".jpeg", ".bmp", ".gif", ".tiff", ".tif"),
+                    (".png", ".jpg", ".jpeg", ".bmp", ".gif", ".tiff", ".tif", ".svg"),
                 ):
                     rel_path = os.path.relpath(os.path.join(root, file), PHOTOS_DIR)
                     present_files.add(rel_path)
@@ -268,6 +270,8 @@ def get_global_defaults(config: configparser.ConfigParser):
     cell_w = _get_int(g, "cell_width", 800)
     cell_h = _get_int(g, "cell_height", 600)
     output_file = g.get("output_file", fallback="collage_output.png")
+
+    debug_caption_boxes = g.getint("debug_caption_boxes", fallback=0)
 
     # --- Rendering quality settings ---
     # Render scale – scales EVERYTHING uniformly (cells, margins, fonts, stroke, shadow)
@@ -409,6 +413,7 @@ def get_global_defaults(config: configparser.ConfigParser):
         "jpeg_quality": jpeg_quality,
         "jpeg_subsampling": jpeg_subsampling,
         "png_compress_level": png_compress_level,
+        "debug_caption_boxes": debug_caption_boxes,
     }
 
 
@@ -517,12 +522,6 @@ def draw_caption(
     else:
         y = ry0 + (ry1 - ry0 - h) // 2
 
-    # Debug drawing (optional)
-    if kwargs.get("debug", 0):
-        draw.rectangle([x, y, x + w, y + h], outline=(0, 255, 0, 255), width=1)
-        draw.line((x - 5, y, x + 5, y), fill=(0, 255, 0, 255), width=1)
-        draw.line((x, y - 5, x, y + 5), fill=(0, 255, 0, 255), width=1)
-
     # ---- Shadow ----
     if int(kwargs.get("shadow", 0)) == 1:
         dx, dy = kwargs.get("shadow_offset", (2, 2))
@@ -555,6 +554,16 @@ def draw_caption(
     stroke_width = int(kwargs.get("stroke_width", 0) or 0)
     stroke_fill = kwargs.get("stroke_fill", (0, 0, 0, 255))
 
+    # Debug drawing (optional)
+    if kwargs.get("debug", 0):
+        draw.rectangle(
+            [x, y, x + w, y + h],
+            outline=(255, 0, 0, 255),
+            width=stroke_width or 1,
+        )
+        draw.line((x - 5, y, x + 5, y), fill=(255, 0, 0, 255), width=stroke_width or 1)
+        draw.line((x, y - 5, x, y + 5), fill=(255, 0, 0, 255), width=stroke_width or 1)
+
     # Draw main text with stroke if supported
     try:
         draw.multiline_text(
@@ -586,6 +595,15 @@ def draw_caption(
                 )
         # Draw the fill on top
         draw.multiline_text((x, y), wrapped, font=font, fill=fill, align=align)
+
+
+def load_image_any_format(fpath: str) -> Image.Image:
+    if fpath.lower().endswith(".svg"):
+        with open(fpath, "rb") as f:
+            svg_data = f.read()
+        png_data = cairosvg.svg2png(bytestring=svg_data)
+        return Image.open(io.BytesIO(png_data)).convert("RGBA")
+    return Image.open(fpath).convert("RGBA")
 
 
 def place_image_into_cell(
@@ -661,7 +679,9 @@ def build_collage(config_path: str):
 
     # Prepare image order & per-image overrides
     order, explicit_map, per_image, filename_to_path = get_image_order_and_positions(
-        config, rows, cols
+        config,
+        rows,
+        cols,
     )
 
     # Build grid
@@ -688,15 +708,24 @@ def build_collage(config_path: str):
                 continue
 
             # Open and place image
-            with Image.open(fpath) as im:
-                im = im.convert("RGBA")
-                fitted, (px, py) = place_image_into_cell(im, cell_rect)
-                canvas.alpha_composite(fitted, dest=(px, py))
+            im = load_image_any_format(fpath)
+            fitted, (px, py) = place_image_into_cell(im, cell_rect)
+            canvas.alpha_composite(fitted, dest=(px, py))
 
-                # Optional dim overlay to increase text legibility
-                if dim_alpha > 0:
-                    overlay = Image.new("RGBA", fitted.size, color=(0, 0, 0, dim_alpha))
-                    canvas.alpha_composite(overlay, dest=(px, py))
+            if dim_alpha > 0:
+                overlay = Image.new("RGBA", fitted.size, color=(0, 0, 0, dim_alpha))
+                canvas.alpha_composite(overlay, dest=(px, py))
+
+            # # Open and place image
+            # with Image.open(fpath) as im:
+            #     im = im.convert("RGBA")
+            #     fitted, (px, py) = place_image_into_cell(im, cell_rect)
+            #     canvas.alpha_composite(fitted, dest=(px, py))
+
+            #     # Optional dim overlay to increase text legibility
+            #     if dim_alpha > 0:
+            #         overlay = Image.new("RGBA", fitted.size, color=(0, 0, 0, dim_alpha))
+            #         canvas.alpha_composite(overlay, dest=(px, py))
 
             # Resolve per-image caption settings (fallback to global)
             p = per_image.get(fname, {})
