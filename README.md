@@ -68,9 +68,9 @@ order = <br>
 
 ### Or if the per image override of position is used, the images can be placed freely<br>
 3x3 grid:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;1  X  X
-&nbsp;&nbsp;&nbsp;&nbsp;4  5  X
-&nbsp;&nbsp;&nbsp;&nbsp;3  2  6
+&nbsp;&nbsp;&nbsp;&nbsp;1  X  X<br>
+&nbsp;&nbsp;&nbsp;&nbsp;4  5  X<br>
+&nbsp;&nbsp;&nbsp;&nbsp;3  2  6<br>
 
 ## ⚙️ Install<br>
 ### To set up the project using uv:
