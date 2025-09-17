@@ -3,6 +3,7 @@
 import configparser
 import os
 import sys
+from pathlib import Path
 
 from PIL import Image, ImageColor, ImageDraw, ImageFont, ImageOps
 
@@ -189,9 +190,21 @@ def get_image_order_and_positions(config, rows, cols):
             continue
         ordered.append(line)
 
-    # Filter to those actually present in ./photos
-    present_files = set(os.listdir(PHOTOS_DIR)) if os.path.isdir(PHOTOS_DIR) else set()
-    ordered = [f for f in ordered if f in present_files]
+    present_files = set()
+    if Path(PHOTOS_DIR).is_dir():
+        for root, _, files in os.walk(PHOTOS_DIR):
+            for file in files:
+                # Only include image files (optional: filter by extension)
+                if file.lower().endswith(
+                    (".png", ".jpg", ".jpeg", ".bmp", ".gif", ".tiff", ".tif"),
+                ):
+                    rel_path = os.path.relpath(os.path.join(root, file), PHOTOS_DIR)
+                    present_files.add(rel_path)
+                    present_files.add(rel_path)
+
+    filename_to_path = {os.path.basename(p): p for p in present_files}
+
+    ordered = [f for f in ordered if f in filename_to_path]
 
     # Now fill a grid: place explicit positions first, then fill remaining slots row-major with the ordered list
     grid = [[None for _ in range(cols)] for _ in range(rows)]
@@ -219,7 +232,7 @@ def get_image_order_and_positions(config, rows, cols):
         for c in range(cols):
             flat.append(grid[r][c])
 
-    return flat, explicit_map, per_image
+    return flat, explicit_map, per_image, filename_to_path
 
 
 def get_global_defaults(config: configparser.ConfigParser):
@@ -647,7 +660,9 @@ def build_collage(config_path: str):
     global_font = load_font(global_font_path, global_size_s)
 
     # Prepare image order & per-image overrides
-    order, explicit_map, per_image = get_image_order_and_positions(config, rows, cols)
+    order, explicit_map, per_image, filename_to_path = get_image_order_and_positions(
+        config, rows, cols
+    )
 
     # Build grid
     idx = 0
@@ -667,7 +682,7 @@ def build_collage(config_path: str):
                 # draw.rectangle(cell_rect, outline=(200,200,200,255), width=1)
                 continue
 
-            fpath = os.path.join(PHOTOS_DIR, fname)
+            fpath = os.path.join(PHOTOS_DIR, filename_to_path[fname])
             if not os.path.isfile(fpath):
                 # Missing file—skip
                 continue
