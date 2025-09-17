@@ -94,8 +94,9 @@ Or follow instructions from uv's GitHub page: https://github.com/astral-sh/uv
 ```
 
 ### This will:<br>
-Create a virtual environment<br>
-Install all required packages from pyproject.toml and requirements.txt (if present)<br>
+Copy the files from github<br>
+Make sure UV is installed. (UV is an fast and easy way of managing python projects and virtual environments)<br>
+uv sync creates a virtual python environment for the program and installs all required packages from pyproject.toml and requirements.txt (if present)<br>
 
 ## ▶️ Usage<br>
 ### Run the script with the desired configuration file:<br>
