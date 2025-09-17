@@ -3,8 +3,9 @@ FigCraft is a Python tool that simplifies creating image collages for reports, p
 It supports flexible layouts, text customization, and high-resolution export for professional results.<br>
 
 ## ✅ Features<br>
-Flexible grid layouts (e.g., 2x2, 3x2, 4x1).<br>
-Global and per-image text customization:<br>
+Flexible grid layouts (e.g., 2x2, 3x2, 4x1).
+
+### Global and per-image text customization:<br>
 Font, size, color<br>
 Position (top/middle/bottom × left/center/right)<br>
 Alignment (left, center, right)<br>
@@ -24,20 +25,20 @@ project/<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ ...<br>
 
 
-⚙️ Configuration Basics<br>
+## ⚙️ Configuration Basics<br>
 All settings are defined in a config.txt file.<br>
 
-[GLOBAL]<br>
+### [GLOBAL]<br>
 grid_shape: Layout of the collage (e.g., 2x2, 3x2).<br>
 margin: Spacing between cells (in pixels).<br>
 text settings: Color, size, font, alignment, position.<br>
 output_file: Name of the exported collage image.<br>
 
-[IMAGES]<br>
+### [IMAGES]<br>
 order: List of image filenames in the desired order.<br>
 
-Example:<br>
-[GLOBAL]<br>
+## Example:<br>
+### [GLOBAL]<br>
 grid_shape = 2x2<br>
 margin = 24<br>
 text_color = white<br>
@@ -46,27 +47,27 @@ text_alignment = center<br>
 text_position = bottom-center<br>
 output_file = collage_output.png<br>
 
-[IMAGES]<br>
+### [IMAGES]<br>
 order = <br>
-    img1.jpg<br>
-    img2.jpg<br>
-    img3.jpg<br>
-    img4.jpg<br>
+&nbsp;&nbsp;&nbsp;&nbsp;img1.jpg<br>
+&nbsp;&nbsp;&nbsp;&nbsp;img2.jpg<br>
+&nbsp;&nbsp;&nbsp;&nbsp;img3.jpg<br>
+&nbsp;&nbsp;&nbsp;&nbsp;img4.jpg<br>
 
-🖼️ Image Ordering<br>
-Images are placed row by row, left to right:<br>
+## 🖼️ Image Ordering<br>
+### Images are placed row by row, left to right:<br>
 2×2 grid:<br>
-    1  2<br>
-    3  4<br>
+&nbsp;&nbsp;&nbsp;&nbsp;1  2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;3  4<br>
 
 4×1 grid:<br>
-    1<br>
-    2<br>
-    3<br>
-    4<br>
+&nbsp;&nbsp;&nbsp;&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;4<br>
 
-⚙️ Install<br>
-To set up the project using uv:
+## ⚙️ Install<br>
+### To set up the project using uv:
 
 1. Install uv (if not already installed)
 
@@ -78,12 +79,12 @@ Or follow instructions from uv's GitHub page.
 
 	uv sync
 
-This will:<br>
+### This will:<br>
 Create a virtual environment<br>
 Install all required packages from pyproject.toml and requirements.txt (if present)<br>
 
-▶️ Usage<br>
-Run the script with the desired configuration file:<br>
+## ▶️ Usage<br>
+### Run the script with the desired configuration file:<br>
 
 	uv run main.py
 
@@ -93,26 +94,26 @@ Or with a custom config file:<br>
 
 If no file is specified, it defaults to config.txt.<br>
 
-🔍 Advanced Features<br>
-✅ Per-Image Overrides<br>
-Override global settings for specific images:<br>
+## 🔍 Advanced Features<br>
+## ✅ Per-Image Overrides<br>
+### Override global settings for specific images:<br>
 
-[image:img2.jpg]<br>
+### [image:img2.jpg]<br>
 text_string = Custom caption for image 2<br>
 text_color = #ff0000<br>
 text_size = 48<br>
 text_alignment = left<br>
 text_position = top-left<br>
 
-✅ High-Resolution Export<br>
-For print-quality output:<br>
+## ✅ High-Resolution Export<br>
+### For print-quality output:<br>
 render_scale = 2.0      ; doubles pixel dimensions<br>
 output_dpi = 300        ; embed 300 DPI for printing<br>
 jpeg_quality = 95<br>
 jpeg_subsampling = 0    ; best for text<br>
 
-✅ Text Styling<br>
-Enhance readability:<br>
+## ✅ Text Styling<br>
+### Enhance readability:<br>
 text_stroke_width = 2<br>
 text_stroke_color = black<br>
 text_shadow = 1<br>
@@ -120,12 +121,12 @@ text_shadow_offset = 3,3<br>
 text_shadow_color = rgba(0,0,0,0.6)<br>
 text_shadow_radius = 1<br>
 
-✅ Dim Overlay<br>
-Darken images slightly to make text pop:<br>
+## ✅ Dim Overlay<br>
+### Darken images slightly to make text pop:<br>
 INIdim_overlay_alpha = 80   ; 0 = off, 255 = fully black<br>
 
-✅ Multiple Configurations<br>
-Create multiple .txt configs for different layouts or styles:<br>
+## ✅ Multiple Configurations<br>
+### Create multiple .txt configs for different layouts or styles:<br>
 
 	puv run main.py config_presentation.txt
 
@@ -133,11 +134,11 @@ or:<br>
 
 	uv run main.py config_report.txt
 
-✅ Debug Mode<br>
-Enable debug guides to visualize caption placement:<br>
+## ✅ Debug Mode<br>
+### Enable debug guides to visualize caption placement:<br>
     debug_caption_boxes = 1<br>
 
-🖨️ Print-Quality Tips<br>
+## 🖨️ Print-Quality Tips<br>
 A4 @ 300 DPI → ~3508×2480 px → render_scale ≈ 1.4 for a 2×3 grid with 800 px cells.<br>
 A3 @ 300 DPI → ~4961×3508 px → render_scale ≈ 2.0.<br>
 Use PNG for sharp text or JPEG with subsampling=0 for smaller files.<br>
