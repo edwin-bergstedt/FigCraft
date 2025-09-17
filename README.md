@@ -69,11 +69,24 @@ Images are placed row by row, left to right:
 3
 4
 
+⚙️ Install
+To set up the project using uv:
+1. Install uv (if not already installed)
+	curl -LsSf https://astral.sh/uv/install.sh | sh
+Or follow instructions from uv's GitHub page.
+
+2. Sync dependencies and create virtual environment
+	uv sync
+This will:
+
+Create a virtual environment
+Install all required packages from pyproject.toml and requirements.txt (if present)
 
 ▶️ Usage
 Run the script with the desired configuration file:
-	
-	python main.py config_example.txt
+	uv run main.py
+Or with a custom config file:
+	uv run main.py config_example.txt
 
 If no file is specified, it defaults to config.txt.
 
