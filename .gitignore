@@ -9,5 +9,5 @@ wheels/
 # Virtual environments
 .venv
 # Photos
-photos/
+# photos/
 collage_output.png
