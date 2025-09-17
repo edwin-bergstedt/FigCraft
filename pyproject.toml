@@ -1,5 +1,5 @@
 [project]
-name = "create-collage"
+name = "FigCraft"
 version = "0.1.1"
 description = "Program to create a collage of images with optional text overlays."
 readme = "README.md"
