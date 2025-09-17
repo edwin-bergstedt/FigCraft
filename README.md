@@ -57,8 +57,8 @@ order = <br>
 ## 🖼️ Image Ordering<br>
 ### Images are placed row by row, left to right:<br>
 **2×2 grid:**<br>
-&nbsp;&nbsp;&nbsp;&nbsp;1  2<br>
-&nbsp;&nbsp;&nbsp;&nbsp;3  4<br>
+&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;3&nbsp;&nbsp;4<br>
 
 **4×1 grid:**<br>
 &nbsp;&nbsp;&nbsp;&nbsp;1<br>
@@ -68,9 +68,9 @@ order = <br>
 
 ### Or if the per image override of position is used, the images can be placed freely:<br>
 **3x3 grid:**<br>
-&nbsp;&nbsp;&nbsp;&nbsp;1  X  X<br>
-&nbsp;&nbsp;&nbsp;&nbsp;4  5  X<br>
-&nbsp;&nbsp;&nbsp;&nbsp;3  2  6<br>
+&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;X&nbsp;&nbsp;X<br>
+&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;5&nbsp;&nbsp;X<br>
+&nbsp;&nbsp;&nbsp;&nbsp;3&nbsp;&nbsp;2&nbsp;&nbsp;6<br>
 
 ## ⚙️ Install<br>
 ### To set up the project using uv:
