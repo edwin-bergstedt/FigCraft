@@ -1,8 +1,8 @@
-🖼️ FigCraft<br>
+🖼️ # FigCraft<br>
 FigCraft is a Python tool that simplifies creating image collages for reports, presentations, and documentation.<br>
 It supports flexible layouts, text customization, and high-resolution export for professional results.<br>
 
-✅ Features<br>
+✅ ## Features<br>
 Flexible grid layouts (e.g., 2x2, 3x2, 4x1).<br>
 Global and per-image text customization:<br>
 Font, size, color<br>
@@ -14,14 +14,14 @@ High-resolution export with DPI and scaling.<br>
 Optional text stroke (border) and shadow for readability.<br>
 Multiple configuration files for different layouts.<br>
 
-📂 Folder Structure<br>
+📂 ## Folder Structure<br>
 project/<br>
-    ├─ main.py<br>
-    ├─ config.txt<br>
-    └─ photos/<br>
-        ├─ image1.jpg<br>
-        ├─ image2.jpg<br>
-        └─ ...<br>
+&nbsp;&nbsp;&nbsp;&nbsp;├─ main.py<br>
+&nbsp;&nbsp;&nbsp;&nbsp;├─ config.txt<br>
+&nbsp;&nbsp;&nbsp;&nbsp;└─ photos/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ image1.jpg<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ image2.jpg<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ ...<br>
 
 
 ⚙️ Configuration Basics<br>
@@ -66,15 +66,15 @@ Images are placed row by row, left to right:<br>
     4<br>
 
 ⚙️ Install<br>
-To set up the project using uv:<br>
+To set up the project using uv:
 
-1. Install uv (if not already installed)<br>
+1. Install uv (if not already installed)
 
 	curl -LsSf https://astral.sh/uv/install.sh | sh
 
-Or follow instructions from uv's GitHub page.<br>
+Or follow instructions from uv's GitHub page.
 
-2. Sync dependencies and create virtual environment<br>
+2. Sync dependencies and create virtual environment
 
 	uv sync
 
