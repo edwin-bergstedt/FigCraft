@@ -74,7 +74,7 @@ order = <br>
 	curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-Or follow instructions from uv's GitHub page.
+Or follow instructions from uv's GitHub page: https://github.com/astral-sh/uv
 
 2. Sync dependencies and create virtual environment
 ```python
@@ -138,7 +138,7 @@ or:<br>
 
 ## ✅ Debug Mode<br>
 ### Enable debug guides to visualize caption placement:<br>
-    debug_caption_boxes = 1
+debug_caption_boxes = 1
 
 ## 🖨️ Print-Quality Tips<br>
 A4 @ 300 DPI → ~3508×2480 px → render_scale ≈ 1.4 for a 2×3 grid with 800 px cells.<br>
