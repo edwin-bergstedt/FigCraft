@@ -56,18 +56,18 @@ order = <br>
 
 ## 🖼️ Image Ordering<br>
 ### Images are placed row by row, left to right:<br>
-2×2 grid:<br>
+**2×2 grid:**<br>
 &nbsp;&nbsp;&nbsp;&nbsp;1  2<br>
 &nbsp;&nbsp;&nbsp;&nbsp;3  4<br>
 
-4×1 grid:<br>
+**4×1 grid:**<br>
 &nbsp;&nbsp;&nbsp;&nbsp;1<br>
 &nbsp;&nbsp;&nbsp;&nbsp;2<br>
 &nbsp;&nbsp;&nbsp;&nbsp;3<br>
 &nbsp;&nbsp;&nbsp;&nbsp;4<br>
 
-### Or if the per image override of position is used, the images can be placed freely<br>
-3x3 grid:<br>
+### Or if the per image override of position is used, the images can be placed freely:<br>
+**3x3 grid:**<br>
 &nbsp;&nbsp;&nbsp;&nbsp;1  X  X<br>
 &nbsp;&nbsp;&nbsp;&nbsp;4  5  X<br>
 &nbsp;&nbsp;&nbsp;&nbsp;3  2  6<br>
